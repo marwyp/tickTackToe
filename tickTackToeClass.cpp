@@ -3,166 +3,90 @@
 
 using namespace std;
 
+// enum for player
 enum class player{
     X,
     O,
     NOBODY
 };
 
+// enum for game mode
 enum class mode{
+    MINMAX,
     MULTIPLAYER,
     NONE
 };
 
+// field on the board
 struct field{
     char x;
     int y;
 };
 
-
+// class
 class tickTackToe{
+
+    ////////////////////////////////////////////////////////////////////////
+    //                          privete variables                         //
+    ////////////////////////////////////////////////////////////////////////
+
     private:
 
+    // player who makes move currently
     player whoseTurn;
+    // tick tack toe board
     player board[3][3];
+    // winner
     player winner;
+    // field for next move
     field move;
+    // counts amount of made moves
     int turnsCounter;
 
-    char playerToChar(player p){
-        if(p == player::O){
-            return 'o';
-        }else if(p == player::X){
-            return 'x';
-        }else{
-            return ' ';
-        }
-    }
+    ////////////////////////////////////////////////////////////////////////
+    //                          privete functions                         //
+    ////////////////////////////////////////////////////////////////////////
 
-    int xToInt(char x){
-        switch (x)
-        {
-        case 'a':;
-        case 'A':{
-            return 0;
-            break;
-        }
-        case 'b':;
-        case 'B':{
-            return 1;
-            break;
-        }
-        case 'c':;
-        case 'C':{
-            return 2;
-            break;
-        }
-        default:{
-            return -1;
-            break;
-        }   
-        }
-    }
+    // converts player enum to char - o, x
+    char playerToChar(player p);
+
+    // converts x coordinate from char to integer
+    int xToInt(char x);
+
+
+    ////////////////////////////////////////////////////////////////////////
+    //                          public functions                          //
+    ////////////////////////////////////////////////////////////////////////
 
     public:
-    tickTackToe(player startPlayer){
-        whoseTurn = startPlayer;
-        winner = player::NOBODY;
-        turnsCounter = 0;
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++){
-                board[i][j] = player::NOBODY;
-            }
-        }
-    }
 
-    player getWinner(){
-        return winner;
-    }
+    // constructor
+    tickTackToe(player startPlayer);
 
-    char getCharWinner(){
-        return playerToChar(winner);
-    }
+    // winner enum getter
+    player getWinner();
 
-    void printBoard(){
-        cout << "  -------------" << endl;
-        cout << "3 | " << playerToChar(board[0][2]) << " | " << playerToChar(board[1][2]);
-        cout << " | " << playerToChar(board[2][2]) << " |" <<endl;
-        cout << "  -------------" << endl;
-        cout << "2 | " << playerToChar(board[0][1]) << " | " << playerToChar(board[1][1]);
-        cout << " | " << playerToChar(board[2][1]) << " |" <<endl;
-        cout << "  -------------" << endl;
-        cout << "1 | " << playerToChar(board[0][0]) << " | " << playerToChar(board[1][0]);
-        cout << " | " << playerToChar(board[2][0]) << " |" <<endl;
-        cout << "  -------------" << endl;
-        cout << "    A   B   C" << endl << endl;
-    }
+    // winner converted to char getter
+    char getCharWinner();
 
-    void printMoveInterface(){
-        cout << "It is " <<playerToChar(whoseTurn) << " turn" << endl;
-        cout << "Enter you're move: ";
-    }
+    //prints board
+    void printBoard();
 
-    void setMove(field m){
-        move = m;
-    }
+    // prints player move interface
+    void printMoveInterface();
 
-    bool checkMove(){
-        if(move.y > 3 || move.y < 0){
-            cout << "Wrong field!" << endl << endl;
-            return false;
-        }else if(xToInt(move.x) > 3 || xToInt(move.x) < 0){
-            cout << "Wrong field!" << endl << endl;
-            return false;
-        }else if(board[xToInt(move.x)][move.y-1] != player::NOBODY){
-            cout << "This place has already been taken!" << endl << endl;
-            return false;
-        }else{
-            return true;
-        }
-    }
+    // move setter
+    void setMove(field m);
 
-    void makeMove(){
-        board[xToInt(move.x)][move.y-1] = whoseTurn;
-        if(whoseTurn == player::X){
-            whoseTurn = player::O;
-        }else{
-            whoseTurn = player::X;
-        }
-        turnsCounter++;
-    }
+    // chacks if move is correct
+    bool checkMove();
 
-    bool gameOver(){
-        if(winner != player::NOBODY){
-            return true;
-        }else if(turnsCounter == 9){
-            return true;
-        }else{
-            return false;
-        }
-    }
+    // makes move
+    void makeMove();
 
-    void checkWin(){
-        for(int i = 0; i < 3; i++){
-            if(board[0][i] == board[1][i] && board[0][i] == board[2][i] && board[0][i] != player::NOBODY){
-                winner = board[0][i];
-            }
-        }
+    // checks if game is over
+    bool gameOver();
 
-        for(int i = 0; i < 3; i++){
-            if(board[i][2] == board[i][1] && board[i][2] == board[i][0] && board[i][2] != player::NOBODY){
-                winner = board[i][2];
-            }
-        }
-
-        if(board[0][2] == board[1][1] && board[0][2] == board[2][0] && board[0][2] != player::NOBODY){
-            winner = board[1][1];
-        }
-
-        if(board[2][2] == board[1][1] && board[2][2] == board[0][0] && board[2][2] != player::NOBODY){
-            winner = board[1][1];
-        }
-
-    }
-
+    // checks if somebody won
+    void checkWin();
 };
