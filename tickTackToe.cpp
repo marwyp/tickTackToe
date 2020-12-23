@@ -10,11 +10,13 @@ int main(int argc, char *argv[]){
 
     // cmd options variables
     player startPlayer;
+    player AIplayer;
     mode gameMode;
 
     // default values
     gameMode = mode::NONE;
     startPlayer = player::NOBODY;
+    AIplayer = player::NOBODY;
 
     // cmd arguments for
     for(size_t i = 0; i < args.size(); i++){
@@ -32,12 +34,21 @@ int main(int argc, char *argv[]){
         if(args[i] == "-m"){
             if(i + 1 < args.size()){
                 // multiplayer
-                if(args[i + 1] == "m"){
+                if(args[i + 1] == "multiplayer"){
                     gameMode = mode::MULTIPLAYER;
 
-                // single player - min max algorithm
-                }else if(args[i + 1] == "m"){
-                    gameMode = mode::MINMAX;
+                // single player - minimax algorithm
+                }else if(args[i + 1] == "minimax"){
+                    if(i + 2 < args.size()){
+                        if(args[i + 2] == "x"){
+                            AIplayer = player::X;
+                            gameMode = mode::MINIMAX;
+                        }else if(args[i + 2] == "o"){
+                            gameMode = mode::MINIMAX;
+                            AIplayer = player::O;
+                        }
+                    }
+                    
                 }
             }
         }
@@ -50,22 +61,22 @@ int main(int argc, char *argv[]){
     if(startPlayer == player::NOBODY || gameMode == mode::NONE){
         cout << "Options: " << endl;
         cout << "-p <player>\t\t starting player, x or o" << endl;
-        cout << "-m <mode>\t\t game mode, m - multiplayer" << endl;
+        cout << "-m <mode> <AI sign>\t game mode, modes: multiplayer - without AI sign";
+        cout << ", minimax - singleplayer with minimax AI - AI sign x or o" << endl;
 
     // multiplayer
     }else if(startPlayer != player::NOBODY && gameMode == mode::MULTIPLAYER){
         tickTackToe game(startPlayer);
         do{
             game.printBoard();
+            field move;
             do{
                 game.printMoveInterface();
-                field move;
                 cin >> move.x >> move.y;
                 cin.clear();
                 cout << endl;
-                game.setMove(move);
-            }while(!game.checkMove());
-            game.makeMove();
+            }while(!game.checkMove(move));
+            game.makeMove(move);
             game.checkWin();
         }while(!game.gameOver());
 
@@ -77,8 +88,32 @@ int main(int argc, char *argv[]){
             cout << "Player " << game.getCharWinner() << " wins" << endl;
         }
         
-    // single player - min max algorithm   
-    }else if(startPlayer != player::NOBODY && gameMode == mode::MINMAX){
-        ;
+    // single player - minimax algorithm   
+    }else if(startPlayer != player::NOBODY && gameMode == mode::MINIMAX){
+        tickTackToe game(startPlayer);
+        do{
+            game.printBoard();
+            if(game.getWhoseTurn() == AIplayer){
+                game.minimax();
+            }else{
+                field move;
+                do{
+                    game.printMoveInterface();
+                    cin >> move.x >> move.y;
+                    cin.clear();
+                    cout << endl;
+                }while(!game.checkMove(move));
+                game.makeMove(move);
+            }
+            game.checkWin();
+        }while(!game.gameOver());
+
+        game.printBoard();
+
+        if(game.getWinner() == player::NOBODY){
+            cout << endl << "It is draw" << endl;
+        }else{
+            cout << "Player " << game.getCharWinner() << " wins" << endl;
+        }
     }
 }

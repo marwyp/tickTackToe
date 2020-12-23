@@ -12,14 +12,20 @@ enum class player{
 
 // enum for game mode
 enum class mode{
-    MINMAX,
+    MINIMAX,
     MULTIPLAYER,
     NONE
 };
 
-// field on the board
+// field on the board with char
 struct field{
     char x;
+    int y;
+};
+
+// field on the board, ints
+struct intField{
+    int x;
     int y;
 };
 
@@ -38,8 +44,6 @@ class tickTackToe{
     player board[3][3];
     // winner
     player winner;
-    // field for next move
-    field move;
     // counts amount of made moves
     int turnsCounter;
 
@@ -53,6 +57,8 @@ class tickTackToe{
     // converts x coordinate from char to integer
     int xToInt(char x);
 
+    // makes move [0-2][0-2]
+    void makeMove(intField);
 
     ////////////////////////////////////////////////////////////////////////
     //                          public functions                          //
@@ -69,24 +75,27 @@ class tickTackToe{
     // winner converted to char getter
     char getCharWinner();
 
+    // whoseTurn getter
+    player getWhoseTurn();
+
     //prints board
     void printBoard();
 
     // prints player move interface
     void printMoveInterface();
 
-    // move setter
-    void setMove(field m);
-
     // chacks if move is correct
-    bool checkMove();
+    bool checkMove(field move);
 
-    // makes move
-    void makeMove();
+    // makes move [A,B,C][1-3]
+    void makeMove(field move);
 
     // checks if game is over
     bool gameOver();
 
     // checks if somebody won
     void checkWin();
+
+    // minimax algorithm
+    void minimax();
 };

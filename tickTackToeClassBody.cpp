@@ -59,6 +59,11 @@ char tickTackToe::getCharWinner(){
     return playerToChar(winner);
 }
 
+// whoseTurn getter
+player tickTackToe::getWhoseTurn(){
+    return whoseTurn;
+}
+
 //prints board
 void tickTackToe::printBoard(){
     cout << "  -------------" << endl;
@@ -80,13 +85,8 @@ void tickTackToe::printMoveInterface(){
     cout << "Enter you're move: ";
 }
 
-// move setter
-void tickTackToe::setMove(field m){
-    move = m;
-}
-
 // chacks if move is correct
- bool tickTackToe::checkMove(){
+ bool tickTackToe::checkMove(field move){
     if(move.y > 3 || move.y < 0){
         cout << "Wrong field!" << endl << endl;
         return false;
@@ -101,9 +101,20 @@ void tickTackToe::setMove(field m){
     }
 }
 
-// makes move
-void tickTackToe::makeMove(){
+// makes move [A,B,C][1-3]
+void tickTackToe::makeMove(field move){
     board[xToInt(move.x)][move.y-1] = whoseTurn;
+    if(whoseTurn == player::X){
+        whoseTurn = player::O;
+    }else{
+        whoseTurn = player::X;
+    }
+    turnsCounter++;
+}
+
+// makes move [0-2][0-2]
+void tickTackToe::makeMove(intField move){
+    board[move.x][move.y] = whoseTurn;
     if(whoseTurn == player::X){
         whoseTurn = player::O;
     }else{
