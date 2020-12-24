@@ -15,6 +15,7 @@ enum class player{
 enum class mode{
     MINIMAX,
     MULTIPLAYER,
+    TEST,
     NONE
 };
 
@@ -38,7 +39,7 @@ class tickTackToe{
     ////////////////////////////////////////////////////////////////////////
 
     private:
-
+    //public:
     // player who makes move currently
     player whoseTurn;
     // tick tack toe board
@@ -62,7 +63,7 @@ class tickTackToe{
     void makeMove(intField);
 
     // minimax AI
-    int minimaxAI(vector<vector<player>> vBoard, int depth, player currentPlayer);
+    int minimaxAI(vector<vector<player>> vBoard, bool isMaximizing, player AI, player human);
 
     // check win for vector
     player checkVectorWin(vector<vector<player>> vboard);
@@ -107,5 +108,5 @@ class tickTackToe{
     void checkWin();
 
     // minimax algorithm
-    void minimax();
+    void minimax(player AI);
 };

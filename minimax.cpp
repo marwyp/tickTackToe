@@ -3,7 +3,106 @@
 
 using namespace std;
 
-// check win for vector
+// checks if board is full
+bool isFullBoard(vector<vector<player>> vboard);
+
+// player change
+player playerChange(player p);
+
+// minimax algorhitm
+int tickTackToe::minimaxAI(vector<vector<player>> vBoard, bool isMaximizing, player AI, player human){
+    player result = checkVectorWin(vBoard);
+    if(result == AI){
+        return 1;
+    }else if(result == human){
+        return -1;
+    }else if(isFullBoard(vBoard)){
+        return 0;
+    }else if(isMaximizing){
+        int bestScore = -2;
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                if(vBoard[i][j] == player::NOBODY){
+                    vBoard[i][j] = AI;
+                    int score = minimaxAI(vBoard, false, AI, human);
+                    vBoard[i][j] = player::NOBODY;
+                    if(score > bestScore){
+                        bestScore = score;
+                    }
+                }
+            }
+        }
+        return bestScore;
+    }else{
+        int bestScore = 2;
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                if(vBoard[i][j] == player::NOBODY){
+                    vBoard[i][j] = human;
+                    int score = minimaxAI(vBoard, true, AI, human);
+                    vBoard[i][j] = player::NOBODY;
+                    if(score < bestScore){
+                        bestScore = score;
+                    }
+                }
+            }
+        }
+        return bestScore;
+    }
+}
+
+// tickTackToe void function
+void tickTackToe::minimax(player AI){
+    intField bestMove;
+    int bestScore = -3;
+    int score;
+
+    // converting board to vector
+    vector<vector<player>> vectorBoard;
+    for(int i = 0; i < 3; i++){
+        vector<player> row; 
+        for(int j = 0; j < 3; j++){
+            row.push_back(board[i][j]);
+        }
+        vectorBoard.push_back(row);
+    }
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            if(board[i][j] == player::NOBODY){
+                intField move;
+                move.x = i;
+                move.y = j;
+                vectorBoard[i][j] = AI;
+                score = minimaxAI(vectorBoard, false, AI, playerChange(AI));
+                vectorBoard[i][j] = player::NOBODY;
+                if(score > bestScore){
+                    bestScore = score;
+                    bestMove = move;
+                }
+                
+            }
+        }
+    }
+
+    makeMove(bestMove);
+}
+
+/////////////////////////////////////////////////////////////
+
+bool isFullBoard(vector<vector<player>> vboard){
+    bool returnFlag = true;
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            if(vboard[i][j] == player::NOBODY){
+                returnFlag = false;
+                break;
+            }
+        }
+    }
+    return returnFlag;
+}
+
+// checks win for vector
 player tickTackToe::checkVectorWin(vector<vector<player>> vboard){
     player winner;
     winner = player::NOBODY;
@@ -32,88 +131,8 @@ player tickTackToe::checkVectorWin(vector<vector<player>> vboard){
 // player change
 player playerChange(player p){
     if(p == player::X){
-        return player::X;
-    }else{
         return player::O;
-    }
-}
-
-// minimax algorhitm
-int tickTackToe::minimaxAI(vector<vector<player>> vBoard, int depth, player currentPlayer){
-    player result = checkVectorWin(vBoard);
-    if(result != player::NOBODY){
-        if(result == whoseTurn){
-            return 1;
-        }else{
-            return -1;
-        }
-    }
-    if(currentPlayer == whoseTurn){
-        int bestScore = -1;
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++){
-                if(vBoard[i][j] == player::NOBODY){
-                    vBoard[i][j] = whoseTurn;
-                    int score = minimaxAI(vBoard, depth + 1, playerChange(currentPlayer));
-                    vBoard[i][j] = player::NOBODY;
-                    if(score >= bestScore){
-                        bestScore = score;
-                    }
-                }
-            }
-        }
-        return bestScore;
     }else{
-        int bestScore = 1;
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++){
-                if(vBoard[i][j] == player::NOBODY){
-                    vBoard[i][j] = playerChange(whoseTurn);
-                    int score = minimaxAI(vBoard, depth + 1, playerChange(currentPlayer));
-                    vBoard[i][j] = player::NOBODY;
-                    if(score <= bestScore){
-                        bestScore = score;
-                    }
-                }
-            }
-        }
-        return bestScore;
+        return player::X;
     }
-}
-
-// tickTackToe void function
-void tickTackToe::minimax(){
-    intField bestMove;
-    int bestScore = -1;
-    int score;
-
-    // converting board to vector
-    vector<vector<player>> vectorBoard;
-    for(int i = 0; i < 3; i++){
-        vector<player> row; 
-        for(int j = 0; j < 3; j++){
-            row.push_back(board[i][j]);
-        }
-        vectorBoard.push_back(row);
-    }
-    for(int i = 0; i < 3; i++){
-        for(int j = 0; j < 3; j++){
-            if(board[i][j] == player::NOBODY){
-                intField move;
-                move.x = i;
-                move.y = j;
-                vectorBoard[i][j] = whoseTurn;
-                //printBoard(vectorBoard);
-                score = minimaxAI(vectorBoard, 0, whoseTurn);
-                vectorBoard[i][j] = player::NOBODY;
-                if(score >= bestScore){
-                    bestScore = score;
-                    bestMove = move;
-                }
-                
-            }
-        }
-    }
-
-    makeMove(bestMove);
 }
