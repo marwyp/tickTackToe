@@ -79,6 +79,21 @@ void tickTackToe::printBoard(){
     cout << "    A   B   C" << endl << endl;
 }
 
+//prints board
+void tickTackToe::printBoard(vector<vector<player>> vBoard){
+    cout << "  -------------" << endl;
+    cout << "3 | " << playerToChar(vBoard[0][2]) << " | " << playerToChar(vBoard[1][2]);
+    cout << " | " << playerToChar(vBoard[2][2]) << " |" <<endl;
+    cout << "  -------------" << endl;
+    cout << "2 | " << playerToChar(vBoard[0][1]) << " | " << playerToChar(vBoard[1][1]);
+    cout << " | " << playerToChar(vBoard[2][1]) << " |" <<endl;
+    cout << "  -------------" << endl;
+    cout << "1 | " << playerToChar(vBoard[0][0]) << " | " << playerToChar(vBoard[1][0]);
+    cout << " | " << playerToChar(vBoard[2][0]) << " |" <<endl;
+    cout << "  -------------" << endl;
+    cout << "    A   B   C" << endl << endl;
+}
+
 // prints player move interface
 void tickTackToe::printMoveInterface(){
     cout << "It is " <<playerToChar(whoseTurn) << " turn" << endl;

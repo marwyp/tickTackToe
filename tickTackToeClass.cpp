@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -59,6 +60,15 @@ class tickTackToe{
 
     // makes move [0-2][0-2]
     void makeMove(intField);
+
+    // minimax AI
+    int minimaxAI(vector<vector<player>> vBoard, int depth, player currentPlayer);
+
+    // check win for vector
+    player checkVectorWin(vector<vector<player>> vboard);
+
+    //prints board
+    void printBoard(vector<vector<player>> vBoard);
 
     ////////////////////////////////////////////////////////////////////////
     //                          public functions                          //
